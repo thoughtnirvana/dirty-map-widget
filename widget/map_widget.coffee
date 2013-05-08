@@ -14,6 +14,12 @@ $.fn.extend
     this.css('border-width', '1px')
     this.append("<div id='map-list'></div>")
     this.append("<div id='camera-list'></div>")
+    cam_description_in_focus_color = 'white'
+    cam_button_in_focus_background_color = '#F88017'
+    cam_location_in_focus_color = '#38ACEC'
+    cam_description_out_focus_color = '#1874CD'
+    cam_button_out_focus_background_color = '#1874CD'
+    cam_location_out_focus_color = 'darkgrey'
     infoWindow = new google.maps.InfoWindow({size: new google.maps.Size(50,50)})
     LatLng = new google.maps.LatLng(37.7930944, -122.4169949)
     mapOptions = {
@@ -65,16 +71,15 @@ $.fn.extend
 
     fnover = ->
                $(this).css('background-color', '#1874CD')
-               $(this.getElementsByClassName('cam-description')[0]).css('color', 'white')
-               $(this.getElementsByClassName('cam-button')[0]).css('background-color', '#F88017')
-               $(this.getElementsByClassName('cam-location')[0]).css('color', '#38ACEC')
+               $(this.getElementsByClassName('cam-description')[0]).css('color', cam_description_in_focus_color)
+               $(this.getElementsByClassName('cam-button')[0]).css('background-color', cam_button_in_focus_background_color)
+               $(this.getElementsByClassName('cam-location')[0]).css('color', cam_location_in_focus_color)
 
     fnout = ->
               $(this).css('background-color', 'white')
-              $(this.getElementsByClassName('cam-description')[0]).css('color', '#1874CD')
-              $(this.getElementsByClassName('cam-button')[0]).css('background-color', '#1874CD')
-              $(this.getElementsByClassName('cam-location')[0]).css('color', 'darkgrey')
-
+              $(this.getElementsByClassName('cam-description')[0]).css('color', cam_description_out_focus_color)
+              $(this.getElementsByClassName('cam-button')[0]).css('background-color', cam_button_out_focus_background_color)
+              $(this.getElementsByClassName('cam-location')[0]).css('color', cam_location_out_focus_color)
 
     $('.parent').hover \
       (fnover),

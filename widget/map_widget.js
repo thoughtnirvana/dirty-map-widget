@@ -3,7 +3,7 @@
 
   $.fn.extend({
     mapList: function(data) {
-      var LatLng, bounds, fnout, fnover, i, infoHtml, infoWindow, infoWindowContent, map, mapOptions, marker, marker_array, pos, _i, _ref;
+      var LatLng, bounds, cam_button_in_focus_background_color, cam_button_out_focus_background_color, cam_description_in_focus_color, cam_description_out_focus_color, cam_location_in_focus_color, cam_location_out_focus_color, fnout, fnover, i, infoHtml, infoWindow, infoWindowContent, map, mapOptions, marker, marker_array, pos, _i, _ref;
       if ($("#map-widget-css").length === 0) {
         $('head').append("<link id='map-widget-css' rel='stylesheet' type='text/css' href='../widget/map_widget.css'>");
       }
@@ -17,6 +17,12 @@
       this.css('border-width', '1px');
       this.append("<div id='map-list'></div>");
       this.append("<div id='camera-list'></div>");
+      cam_description_in_focus_color = 'white';
+      cam_button_in_focus_background_color = '#F88017';
+      cam_location_in_focus_color = '#38ACEC';
+      cam_description_out_focus_color = '#1874CD';
+      cam_button_out_focus_background_color = '#1874CD';
+      cam_location_out_focus_color = 'darkgrey';
       infoWindow = new google.maps.InfoWindow({
         size: new google.maps.Size(50, 50)
       });
@@ -67,15 +73,15 @@
       map.fitBounds(bounds);
       fnover = function() {
         $(this).css('background-color', '#1874CD');
-        $(this.getElementsByClassName('cam-description')[0]).css('color', 'white');
-        $(this.getElementsByClassName('cam-button')[0]).css('background-color', '#F88017');
-        return $(this.getElementsByClassName('cam-location')[0]).css('color', '#38ACEC');
+        $(this.getElementsByClassName('cam-description')[0]).css('color', cam_description_in_focus_color);
+        $(this.getElementsByClassName('cam-button')[0]).css('background-color', cam_button_in_focus_background_color);
+        return $(this.getElementsByClassName('cam-location')[0]).css('color', cam_location_in_focus_color);
       };
       fnout = function() {
         $(this).css('background-color', 'white');
-        $(this.getElementsByClassName('cam-description')[0]).css('color', '#1874CD');
-        $(this.getElementsByClassName('cam-button')[0]).css('background-color', '#1874CD');
-        return $(this.getElementsByClassName('cam-location')[0]).css('color', 'darkgrey');
+        $(this.getElementsByClassName('cam-description')[0]).css('color', cam_description_out_focus_color);
+        $(this.getElementsByClassName('cam-button')[0]).css('background-color', cam_button_out_focus_background_color);
+        return $(this.getElementsByClassName('cam-location')[0]).css('color', cam_location_out_focus_color);
       };
       $('.parent').hover(fnover, fnout);
       $('.parent').click(function() {
