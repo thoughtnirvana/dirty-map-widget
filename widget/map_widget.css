@@ -1,0 +1,74 @@
+#map-list {
+  height: 98%;
+  width: 70%;
+  float: left;
+}
+
+#camera-list {
+  width: 29%;
+  height: 98%;
+  float: right;
+  overflow: scroll;
+}
+
+.parent {
+  display: inline-block;
+  width: 100%;
+  border-bottom: solid 1px grey;
+  padding-top: 2%;
+}
+
+/*.parent:hover {
+  background: #1874CD;
+}*/
+
+.left {
+  float: left;
+  padding-left: 3%;
+}
+
+.right {
+  float: left;
+  margin-left: 5%;
+  margin-top: 5%;
+}
+
+.cam-img {
+  padding: 20%;
+}
+
+.cam-description {
+  color: #1874CD;
+  font-size: 20px;
+}
+
+.cam-price {
+  margin-left: 0%;
+  margin-top: -5%;
+  font-size: 19px;
+  color: white;
+  background: black;
+  text-align: center;
+}
+
+.cam-location {
+  margin-top: -10%;
+  margin-bottom: 5%;
+  color: darkgrey;
+}
+
+.cam-button {
+  background-color: #1874CD;
+  width: 75px;
+  height: 30px;
+  font-size: 100%;
+  color: white;
+  border: 1px solid #8ec1da;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.left-background {
+  width: 100%;
+  background: whitesmoke;
+}

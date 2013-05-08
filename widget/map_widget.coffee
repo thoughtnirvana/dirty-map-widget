@@ -2,9 +2,19 @@
 
 $.fn.extend
   mapList: (data) ->
-    this.append("<div id='map-list' style='height: 80%; width: 60%; float:left;'></div>")
-    this.append("<div id='camera-list' style='width: 35%; float: right;'></div>")
-    infoWindow = new google.maps.InfoWindow()
+    if $("#map-widget-css").length == 0
+      $('head').append("<link id='map-widget-css' rel='stylesheet' type='text/css' href='../widget/map_widget.css'>")
+    this.css('margin-top', '2%')
+    this.css('margin-left', '2%')
+    this.css('height', '90%')
+    this.css('width', '92%')
+    this.css('padding', '1%')
+    this.css('border-style', 'solid')
+    this.css('border-color', 'gray')
+    this.css('border-width', '1px')
+    this.append("<div id='map-list'></div>")
+    this.append("<div id='camera-list'></div>")
+    infoWindow = new google.maps.InfoWindow({size: new google.maps.Size(50,50)})
     LatLng = new google.maps.LatLng(37.7930944, -122.4169949)
     mapOptions = {
       center: LatLng,
@@ -14,22 +24,70 @@ $.fn.extend
     map = new google.maps.Map($("#map-list")[0],
       mapOptions);
     bounds = new google.maps.LatLngBounds();
+    marker_array = []
     for i in [0..data.length-1]
-      infoString = "<ul><li>Camera Location: #{data[i].location}</li><li>Price: #{data[i].price}</li></ul>"
-      $('#camera-list').append(infoString)
+      infoHtml =
+        "<div id='unique-#{i}' class='parent'><div class='left'>" +
+        "<div class='left-background'><img height='75' width='75' class='cam-img' src=#{data[i].img}" +
+        "></img><p class='cam-price'>#{data[i].price}" +
+        "</p></div></div><div class='right'><p class='cam-description'>#{data[i].description}</p>" +
+        "<p class='cam-location'>#{data[i].location}</p>" +
+        "<a href=#{data[i].action_url}><button class='cam-button'>Rent</button></a></div></div>"
+      $('#camera-list').append(infoHtml)
+      infoWindowContent =
+        "<p class='cam-description'>#{data[i].description}</p>" +
+        "<p class='cam-location'>#{data[i].location}</p>" +
+        "<p class='cam-price'>#{data[i].price}"
       pos = new google.maps.LatLng(data[i].latlong[0], data[i].latlong[1])
       marker = new google.maps.Marker({
         position: pos,
         animation: google.maps.Animation.DROP,
-        title: data[i].location
+        title: data[i].location,
+        class_name: data[i].action_url,
+        unique_id: "unique-#{i}"
       })
       marker.setMap(map)
-      google.maps.event.addListener(marker, 'click', ((marker,infoString,infoWindow) ->
+      google.maps.event.addListener(marker, 'click', ((marker,infoWindowContent,infoWindow) ->
         ->
-          infoWindow.setContent(infoString)
-          infoWindow.open(map,marker))(marker,infoString,infoWindow))
+          infoWindow.setContent(infoWindowContent)
+          infoWindow.open(map,marker)
+          for element in $("#camera-list")[0].getElementsByClassName('parent')
+            do (element) ->
+              fnout.call(element)
+          fnover.call($("##{this.unique_id}")[0])
+          $('#camera-list').animate({
+            scrollTop: $("##{this.unique_id}").offset().top + 'px'
+            }, 'fast')
+          )(marker,infoWindowContent,infoWindow))
+      marker_array.push(marker)
       bounds.extend(pos)
     map.fitBounds(bounds)
+
+    fnover = ->
+               $(this).css('background-color', '#1874CD')
+               $(this.getElementsByClassName('cam-description')[0]).css('color', 'white')
+               $(this.getElementsByClassName('cam-button')[0]).css('background-color', '#F88017')
+               $(this.getElementsByClassName('cam-location')[0]).css('color', '#38ACEC')
+
+    fnout = ->
+              $(this).css('background-color', 'white')
+              $(this.getElementsByClassName('cam-description')[0]).css('color', '#1874CD')
+              $(this.getElementsByClassName('cam-button')[0]).css('background-color', '#1874CD')
+              $(this.getElementsByClassName('cam-location')[0]).css('color', 'darkgrey')
+
+
+    $('.parent').hover \
+      (fnover),
+      (fnout)
+
+    $('.parent').click ->
+      parent_id = this.id
+      for i in marker_array
+        if parent_id == i.unique_id
+          google.maps.event.trigger( i ,'click')
+          break
+
+      fnover.call(this)
     return this
 
 
