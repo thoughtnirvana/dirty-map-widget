@@ -1,0 +1,40 @@
+!!!
+%html
+  %head
+    %title "Demo"
+    :css
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+    %script(type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js")
+    %script(type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCYWqVQffay4aElBX4OTrjSwxzGE-IVHw&sensor=true")
+    %script(type="text/javascript" src="../widget/map_widget.js")
+    %script(type="text/javascript" src="demo_haml.js")
+  %body
+    %ul#gear-near-you
+      %li{ data: {location: 'Nob Hill',
+                  action_url: '/cam1',
+                  price: '$7/day',
+                  latlong: [37.7930944, -122.4169949],
+                  img: 'cameras/cam1.jpg'}}
+        %a(href='#') Canon 60D
+
+      %li{ data: {location: 'Location-1',
+                  action_url: '/cam2',
+                  price: '$8/day',
+                  latlong: [37.792405, -122.416813],
+                  img: 'cameras/cam2.jpg'}}
+        %a(href='#') Awesome Camera-2
+
+      %li{ data: {location: 'Location-2',
+                  action_url: '/cam3',
+                  price: '$10/day',
+                  latlong: [37.792829, -122.424456],
+                  img: 'cameras/cam4.jpeg'}}
+        %a(href='#') Optic Zoom Camera-5
+
+      %li{ data: {location: 'Location-3',
+                  action_url: '/cam4',
+                  price: '$13/day',
+                  latlong: [37.799883, -122.416792],
+                  img: 'cameras/cam5.jpeg'}}
+        %a(href='#') My Camera-5

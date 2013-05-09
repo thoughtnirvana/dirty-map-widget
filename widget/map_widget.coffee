@@ -4,6 +4,29 @@ $.fn.extend
   mapList: (data) ->
     if $("#map-widget-css").length == 0
       $('head').append("<link id='map-widget-css' rel='stylesheet' type='text/css' href='../widget/map_widget.css'>")
+    if data == undefined
+      data = []
+      li_elements = this[0].getElementsByTagName('li')
+      if li_elements.length < 1
+        return false
+      else
+      for i in [0..li_elements.length-1]
+        # Modern browsers support dataset, but might be too modern
+        # li.dataset['description'] = li.innerText
+        # data.push(li.dataset)
+        li_element = li_elements[i]
+        data_hash = {}
+        $(li_element).css('display', 'none')
+        data_hash['actionUrl'] = li_element.getAttribute('data-action-url')
+        data_hash['img'] = li_element.getAttribute('data-img')
+        latlong = li_element.getAttribute('data-latlong').split(/[\[,\]]/).filter (el) ->
+          return el.length>0
+        data_hash['latlong'] = latlong.map (el) ->
+          return parseFloat(el)
+        data_hash['location'] = li_element.getAttribute('data-location')
+        data_hash['price'] = li_element.getAttribute('data-price')
+        data_hash['description'] = li_element.innerText
+        data.push (data_hash)
     this.css('margin-top', '2%')
     this.css('margin-left', '2%')
     this.css('height', '90%')
@@ -38,7 +61,7 @@ $.fn.extend
         "></img><p class='cam-price'>#{data[i].price}" +
         "</p></div></div><div class='right'><p class='cam-description'>#{data[i].description}</p>" +
         "<p class='cam-location'>#{data[i].location}</p>" +
-        "<a href=#{data[i].action_url}><button class='cam-button'>Rent</button></a></div></div>"
+        "<a href=#{data[i].actionUrl}><button class='cam-button'>Rent</button></a></div></div>"
       $('#camera-list').append(infoHtml)
       infoWindowContent =
         "<p class='cam-description'>#{data[i].description}</p>" +
@@ -49,7 +72,7 @@ $.fn.extend
         position: pos,
         animation: google.maps.Animation.DROP,
         title: data[i].location,
-        class_name: data[i].action_url,
+        class_name: data[i].actionUrl,
         unique_id: "unique-#{i}"
       })
       marker.setMap(map)

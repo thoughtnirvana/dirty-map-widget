@@ -3,9 +3,30 @@
 
   $.fn.extend({
     mapList: function(data) {
-      var LatLng, bounds, cam_button_in_focus_background_color, cam_button_out_focus_background_color, cam_description_in_focus_color, cam_description_out_focus_color, cam_location_in_focus_color, cam_location_out_focus_color, fnout, fnover, i, infoHtml, infoWindow, infoWindowContent, map, mapOptions, marker, marker_array, pos, _i, _ref;
+      var LatLng, bounds, cam_button_in_focus_background_color, cam_button_out_focus_background_color, cam_description_in_focus_color, cam_description_out_focus_color, cam_location_in_focus_color, cam_location_out_focus_color, data_hash, fnout, fnover, i, infoHtml, infoWindow, infoWindowContent, latlong, li_element, li_elements, map, mapOptions, marker, marker_array, pos, _i, _j, _ref, _ref1;
       if ($("#map-widget-css").length === 0) {
         $('head').append("<link id='map-widget-css' rel='stylesheet' type='text/css' href='../widget/map_widget.css'>");
+      }
+      if (data === void 0) {
+        data = [];
+        li_elements = this[0].getElementsByTagName('li');
+        for (i = _i = 0, _ref = li_elements.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
+          li_element = li_elements[i];
+          data_hash = {};
+          $(li_element).css('display', 'none');
+          data_hash['actionUrl'] = li_element.getAttribute('data-action-url');
+          data_hash['img'] = li_element.getAttribute('data-img');
+          latlong = li_element.getAttribute('data-latlong').split(/[\[,\]]/).filter(function(el) {
+            return el.length > 0;
+          });
+          data_hash['latlong'] = latlong.map(function(el) {
+            return parseFloat(el);
+          });
+          data_hash['location'] = li_element.getAttribute('data-location');
+          data_hash['price'] = li_element.getAttribute('data-price');
+          data_hash['description'] = li_element.innerText;
+          data.push(data_hash);
+        }
       }
       this.css('margin-top', '2%');
       this.css('margin-left', '2%');
@@ -35,8 +56,8 @@
       map = new google.maps.Map($("#map-list")[0], mapOptions);
       bounds = new google.maps.LatLngBounds();
       marker_array = [];
-      for (i = _i = 0, _ref = data.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
-        infoHtml = ("<div id='unique-" + i + "' class='parent'><div class='left'>") + ("<div class='left-background'><img height='75' width='75' class='cam-img' src=" + data[i].img) + ("></img><p class='cam-price'>" + data[i].price) + ("</p></div></div><div class='right'><p class='cam-description'>" + data[i].description + "</p>") + ("<p class='cam-location'>" + data[i].location + "</p>") + ("<a href=" + data[i].action_url + "><button class='cam-button'>Rent</button></a></div></div>");
+      for (i = _j = 0, _ref1 = data.length - 1; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; i = 0 <= _ref1 ? ++_j : --_j) {
+        infoHtml = ("<div id='unique-" + i + "' class='parent'><div class='left'>") + ("<div class='left-background'><img height='75' width='75' class='cam-img' src=" + data[i].img) + ("></img><p class='cam-price'>" + data[i].price) + ("</p></div></div><div class='right'><p class='cam-description'>" + data[i].description + "</p>") + ("<p class='cam-location'>" + data[i].location + "</p>") + ("<a href=" + data[i].actionUrl + "><button class='cam-button'>Rent</button></a></div></div>");
         $('#camera-list').append(infoHtml);
         infoWindowContent = ("<p class='cam-description'>" + data[i].description + "</p>") + ("<p class='cam-location'>" + data[i].location + "</p>") + ("<p class='cam-price'>" + data[i].price);
         pos = new google.maps.LatLng(data[i].latlong[0], data[i].latlong[1]);
@@ -44,21 +65,21 @@
           position: pos,
           animation: google.maps.Animation.DROP,
           title: data[i].location,
-          class_name: data[i].action_url,
+          class_name: data[i].actionUrl,
           unique_id: "unique-" + i
         });
         marker.setMap(map);
         google.maps.event.addListener(marker, 'click', (function(marker, infoWindowContent, infoWindow) {
           return function() {
-            var element, _fn, _j, _len, _ref1;
+            var element, _fn, _k, _len, _ref2;
             infoWindow.setContent(infoWindowContent);
             infoWindow.open(map, marker);
-            _ref1 = $("#camera-list")[0].getElementsByClassName('parent');
+            _ref2 = $("#camera-list")[0].getElementsByClassName('parent');
             _fn = function(element) {
               return fnout.call(element);
             };
-            for (_j = 0, _len = _ref1.length; _j < _len; _j++) {
-              element = _ref1[_j];
+            for (_k = 0, _len = _ref2.length; _k < _len; _k++) {
+              element = _ref2[_k];
               _fn(element);
             }
             fnover.call($("#" + this.unique_id)[0]);
@@ -85,10 +106,10 @@
       };
       $('.parent').hover(fnover, fnout);
       $('.parent').click(function() {
-        var parent_id, _j, _len;
+        var parent_id, _k, _len;
         parent_id = this.id;
-        for (_j = 0, _len = marker_array.length; _j < _len; _j++) {
-          i = marker_array[_j];
+        for (_k = 0, _len = marker_array.length; _k < _len; _k++) {
+          i = marker_array[_k];
           if (parent_id === i.unique_id) {
             google.maps.event.trigger(i, 'click');
             break;
